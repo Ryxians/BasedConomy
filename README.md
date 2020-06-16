@@ -1,7 +1,7 @@
 # BasedHits
 BasedHits is an item based bounty plugin allowing players to place bounties/hits on other players. Upon running the '/hit' command the player will be prompted with an inventory to place their bounty in.
 
-*current download: https://github.com/Ryxians/BasedHits/releases/tag/1.0-Snapshot*
+*current download: https://github.com/Ryxians/BasedHits/releases/tag/v1.1-SNAPSHOT*
 
 *Spigot page: SOON*
 
