@@ -1,4 +1,4 @@
-name: BasedConomy
+name: BasedHits
 version: ${project.version}
 main: homebrew.basictrades.BasicTrades
 api-version: 1.13
@@ -6,8 +6,21 @@ authors: [Ryxian]
 description: Item based economy with features such as hits and auctions.
 commands:
   hit:
-    description: Opens a custom inventory
+    description: Allows a player to place a hit on another player
     usage: /<command>
+    aliases: [hits, bounty, bounties]
+    permission: BasedHits.hit
   view:
-    description: test
+    description: Allows a player to view a hit on another player
     usage: /<command>
+    permission: BasedHits.view
+permissions:
+  BasedHits.hit:
+    description: Allows you to use the /hit command
+    default: true
+  BasedHits.view:
+    description: Allows you to use the /view command
+    default: true
+  BasedHits.claim:
+    description: Allows you to claim a bounty
+    default: true

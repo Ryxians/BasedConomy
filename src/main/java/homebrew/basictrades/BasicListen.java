@@ -67,14 +67,16 @@ public class BasicListen implements Listener {
         Player died = evt.getEntity();
         Player killer = died.getKiller();
         if (killer != null) {
-            if (hits.containsKey(died.getUniqueId())) {
-                Inventory death = hits.remove(died.getUniqueId());
-                for (ItemStack i : death.getContents()) {
-                    evt.getDrops().add(i);
+            if (killer != died && killer.hasPermission("BasedHits.claim")) {
+                if (hits.containsKey(died.getUniqueId())) {
+                    Inventory death = hits.remove(died.getUniqueId());
+                    for (ItemStack i : death.getContents()) {
+                        evt.getDrops().add(i);
+                    }
+                    BasicTrades.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
+                    BasicTrades.save();
+                    evt.setDeathMessage(null);
                 }
-                BasicTrades.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
-                BasicTrades.save();
-                evt.setDeathMessage(null);
             }
         }
     }

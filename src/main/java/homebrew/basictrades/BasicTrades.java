@@ -133,6 +133,7 @@ public final class BasicTrades extends JavaPlugin {
         //Get the hits folder with all the hit files
         File hitsFolder = new File(dataFolder, "Hits" + File.separator);
         File[] bounties = hitsFolder.listFiles();
+        if (bounties == null) bounties = new File[0];
         return bounties;
     }
 
