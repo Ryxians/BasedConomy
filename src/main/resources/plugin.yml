@@ -24,3 +24,6 @@ permissions:
   BasedHits.claim:
     description: Allows you to claim a bounty
     default: true
+  BasedHits.broadcast:
+    description: Allows you to see announcements of hits
+    default: true

@@ -57,7 +57,15 @@ public final class BasicTrades extends JavaPlugin {
     }
 
     public static void success(String str) {
-        Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + "[BasedHits] " + ChatColor.GREEN + str);
+        String st = (ChatColor.DARK_GREEN + "[BasedHits] " + ChatColor.GREEN + str);
+        Bukkit.getOnlinePlayers().forEach(i ->
+                {
+                    if (i.hasPermission("BasedHits.broadcast")) {
+                        i.sendMessage(st);
+                    }
+                }
+                );
+        Bukkit.getLogger().log(Level.INFO, st);
     }
 
     public static void loadHits() {
