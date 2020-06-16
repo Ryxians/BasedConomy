@@ -1,0 +1,13 @@
+name: BasedConomy
+version: ${project.version}
+main: homebrew.basictrades.BasicTrades
+api-version: 1.13
+authors: [Ryxian]
+description: Item based economy with features such as hits and auctions.
+commands:
+  hit:
+    description: Opens a custom inventory
+    usage: /<command>
+  view:
+    description: test
+    usage: /<command>
