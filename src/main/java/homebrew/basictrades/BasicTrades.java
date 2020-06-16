@@ -49,15 +49,15 @@ public final class BasicTrades extends JavaPlugin {
     }
 
     public static void success(CommandSender sender, String str) {
-        sender.sendMessage(ChatColor.DARK_GREEN + "[BasicTrades] " + ChatColor.GREEN + str);
+        sender.sendMessage(ChatColor.DARK_GREEN + "[BasedHits] " + ChatColor.GREEN + str);
     }
 
     public static void fail(CommandSender sender, String str) {
-        sender.sendMessage(ChatColor.DARK_RED + "[BasicTrades] " + ChatColor.RED + str);
+        sender.sendMessage(ChatColor.DARK_RED + "[BasedHits] " + ChatColor.RED + str);
     }
 
     public static void success(String str) {
-        Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + "[BasicTrades] " + ChatColor.GREEN + str);
+        Bukkit.getServer().broadcastMessage(ChatColor.DARK_GREEN + "[BasedHits] " + ChatColor.GREEN + str);
     }
 
     public static void loadHits() {
