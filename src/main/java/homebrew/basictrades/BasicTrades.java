@@ -65,7 +65,11 @@ public final class BasicTrades extends JavaPlugin {
                     }
                 }
                 );
-        Bukkit.getLogger().log(Level.INFO, st);
+        logInfo(st);
+    }
+
+    public static void logInfo(String str) {
+        Bukkit.getLogger().log(Level.INFO, str);
     }
 
     public static void loadHits() {

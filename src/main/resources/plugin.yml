@@ -27,3 +27,9 @@ permissions:
   BasedHits.broadcast:
     description: Allows you to see announcements of hits
     default: true
+  BasedHits.anonymous.hit:
+    description: Allows a player to have their hits hidden
+    default: false
+  BasedHits.anonymous.claim:
+    description: Allows a player to have a claim hidden
+    default: false

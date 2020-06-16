@@ -37,7 +37,13 @@ public class BasicListen implements Listener {
                 UUID hitUsr = sHits.remove(evt.getInventory());
                 hits.put(hitUsr, evt.getInventory());
                 BasicTrades.save();
-                BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hitUsr).getName() + ".");
+
+                //Determine whether the entire server gets an anouncement
+                if (evt.getPlayer().hasPermission("BasedHits.anonymous.hit")) {
+                    BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hitUsr).getName() + ".");
+                } else {
+                    BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hitUsr).getName() + ".");
+                }
             }
         }
     }
@@ -73,7 +79,11 @@ public class BasicListen implements Listener {
                     for (ItemStack i : death.getContents()) {
                         evt.getDrops().add(i);
                     }
-                    BasicTrades.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
+                    if (killer.hasPermission("BasedHits.anonymous.claim")) {
+                        BasicTrades.success("The bounty on " + died.getName() + " has been claimed.");
+                    } else {
+                        BasicTrades.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
+                    }
                     BasicTrades.save();
                     evt.setDeathMessage(null);
                 }
