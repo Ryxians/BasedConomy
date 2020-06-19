@@ -39,4 +39,11 @@ BasedHits.hit:
 1. Create multiple viewing pages
 2. Player notification on join
 3. Black/whitelist in config
+4. Add hit expiration
+5. Display hit expiration
+6. Add an ingame way to delete hits (staff)
+7. Automatic Hit deletion
+8. A way for people to claim their expired hits
+9. Being able to sort hits by how new they are
+10. Permission levels for how many hits a person can levy
 
