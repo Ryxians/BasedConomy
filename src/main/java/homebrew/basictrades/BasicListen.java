@@ -15,12 +15,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BasicListen implements Listener {
 
-    public static Map<Inventory, UUID> sHits = BasicTrades.sHits;
+    public static Map<Inventory, HitO> sHits = BasicTrades.sHits;
 
-    public static Map<UUID, Inventory> hits = BasicTrades.hits;
+    public static Map<UUID, HitO> hits = BasicTrades.hits;
 
     @EventHandler
     public void hitCreate(InventoryCloseEvent evt) {
@@ -34,15 +35,15 @@ public class BasicListen implements Listener {
             if (isEmpty) {
                 sHits.remove(evt.getInventory());
             } else {
-                UUID hitUsr = sHits.remove(evt.getInventory());
-                hits.put(hitUsr, evt.getInventory());
+                HitO hit = sHits.remove(evt.getInventory());
+                hits.put(hit.bounty, hit);
                 BasicTrades.save();
 
                 //Determine whether the entire server gets an anouncement
                 if (evt.getPlayer().hasPermission("BasedHits.anonymous.hit")) {
-                    BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hitUsr).getName() + ".");
+                    BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 } else {
-                    BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hitUsr).getName() + ".");
+                    BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 }
             }
         }
@@ -50,12 +51,12 @@ public class BasicListen implements Listener {
 
     @EventHandler
     public void hitView(InventoryClickEvent evt) {
-        if (hits.containsValue(evt.getInventory()) || BasicTrades.hitsMenu == evt.getInventory()) {
+        if (checkForInventory(evt.getInventory()) || BasicTrades.hitsMenu == evt.getInventory()) {
             if (BasicTrades.hitsMenu == evt.getInventory()) {
                 if (evt.getCurrentItem().getType() == Material.PLAYER_HEAD) {
                     SkullMeta meta = (SkullMeta) evt.getCurrentItem().getItemMeta();
                     UUID uuid = meta.getOwningPlayer().getUniqueId();
-                    evt.getView().getPlayer().openInventory(hits.get(uuid));
+                    evt.getView().getPlayer().openInventory(hits.get(uuid).prize);
                 }
             }
             evt.setCancelled(true);
@@ -63,9 +64,19 @@ public class BasicListen implements Listener {
     }
     @EventHandler
     public void hitView(InventoryDragEvent evt) {
-        if (hits.containsValue(evt.getInventory()) || BasicTrades.hitsMenu == evt.getInventory()) {
+        if (checkForInventory(evt.getInventory()) || BasicTrades.hitsMenu == evt.getInventory()) {
             evt.setCancelled(true);
         }
+    }
+
+    private boolean checkForInventory(Inventory inv) {
+        AtomicBoolean rc = new AtomicBoolean(false);
+        hits.values().forEach(i -> {
+            if (i.prize == inv) {
+                rc.set(true);
+            }
+        });
+        return rc.get();
     }
 
     @EventHandler
@@ -75,7 +86,7 @@ public class BasicListen implements Listener {
         if (killer != null) {
             if (killer != died && killer.hasPermission("BasedHits.claim")) {
                 if (hits.containsKey(died.getUniqueId())) {
-                    Inventory death = hits.remove(died.getUniqueId());
+                    Inventory death = hits.remove(died.getUniqueId()).prize;
                     for (ItemStack i : death.getContents()) {
                         evt.getDrops().add(i);
                     }

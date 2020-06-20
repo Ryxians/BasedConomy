@@ -1,7 +1,9 @@
 package homebrew.basictrades.commands;
 
 import homebrew.basictrades.BasicTrades;
+import homebrew.basictrades.HitO;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +15,8 @@ import java.util.UUID;
 
 public class Hit implements CommandExecutor {
     BasicTrades plugin = BasicTrades.instance;
-    Map<UUID, Inventory> hits = plugin.hits;
-    Map<Inventory, UUID> sHits = plugin.sHits;
+    Map<UUID, HitO> hits = plugin.hits;
+    Map<Inventory, HitO> sHits = plugin.sHits;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -28,11 +30,12 @@ public class Hit implements CommandExecutor {
                 case 1:
                     //When one person is specified
                     if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
-                        UUID hitUsr = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
+                        OfflinePlayer hitUsr = Bukkit.getOfflinePlayer(args[0]);
                         boolean rc = !hits.containsKey(hitUsr);
                         if (rc) {
                             Inventory temp = cmdSender.openInventory(Bukkit.createInventory(cmdSender, 27, "Hit Price")).getTopInventory();
-                            sHits.put(temp, hitUsr);
+                            HitO hit = new HitO(null, hitUsr, temp);
+                            sHits.put(temp, hit);
                         } else {
                             BasicTrades.fail(sender, "That player already has a hit >>:(");
                         }

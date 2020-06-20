@@ -21,9 +21,9 @@ import java.util.logging.Level;
 public final class BasicTrades extends JavaPlugin {
     public static BasicTrades instance;
 
-    public static Map<Inventory, UUID> sHits = new HashMap<Inventory, UUID>();
+    public static Map<Inventory, HitO> sHits = new HashMap<Inventory, HitO>();
 
-    public static Map<UUID, Inventory> hits = new HashMap<UUID, Inventory>();
+    public static Map<UUID, HitO> hits = new HashMap<UUID, HitO>();
 
     public static Inventory hitsMenu;
 
@@ -78,23 +78,8 @@ public final class BasicTrades extends JavaPlugin {
 
         //Per bounty file
         for (int i = 0; i < bounties.length; i++) {
-            //Get uuid from file name
-            FileConfiguration userHit = YamlConfiguration.loadConfiguration(bounties[i]);
-            UUID uuid = fileToUUID(bounties[i].getName());
-            Map<String, Object> tem = userHit.getValues(false);
-            ItemStack[] is = new ItemStack[27];
-            for (Map.Entry<String, Object> ent : tem.entrySet()) {
-                //Make each item for the inventory
-                if (ent.getValue() instanceof ItemStack) {
-                    String s = ent.getKey();
-                    ItemStack item = (ItemStack) ent.getValue();
-                    int spot = Integer.parseInt(s);
-                    is[spot] = item;
-                }
-            }
-            Inventory inv = Bukkit.createInventory(Bukkit.getPlayer(uuid), 27, "Hit Price");
-            inv.setContents(is);
-            hits.put(uuid, inv);
+            HitO hit = new HitO(bounties[i]);
+            hits.put(hit.bounty, hit);
         }
 
     }
@@ -113,32 +98,9 @@ public final class BasicTrades extends JavaPlugin {
             }
         }
 
-        for (Map.Entry<UUID, Inventory> entry : hits.entrySet()) {
-            //Grab the current UUID and Inventory per hit
-            UUID uuid = entry.getKey();
-            Inventory inventory = entry.getValue();
-
-            //Go to file
-            String fileName = "Hits" + File.separator + uuid + ".yml";
-            File configFile = new File(dataFolder, fileName);
-            FileConfiguration userHit = YamlConfiguration.loadConfiguration(configFile);
-
-            //Get everything in the inventory
-            ItemStack[] contents = inventory.getContents();
-            for (int i = 0; i < contents.length; i++) {
-                if (contents[i] != null) {
-                    userHit.set(String.valueOf(i), contents[i]);
-                }
-            }
-
-            //Save the config for this player
-            try {
-                userHit.save(configFile);
-            } catch (IOException ex) {
-                BasicTrades.instance.getLogger().log(Level.SEVERE, "Could not save config to " + configFile, ex);
-            }
-
-        }
+        hits.values().forEach(i -> {
+            i.saveHit();
+        });
     }
 
     private static File[] getBounties() {
@@ -162,32 +124,14 @@ public final class BasicTrades extends JavaPlugin {
 
     public static void hitsToMenu() {
         int size = 27;
-        int i = 0;
         if (hits.size() >= 27) size = 54;
         hitsMenu = Bukkit.createInventory(null, size, "Active Server Bounties");
 
-        for (Map.Entry<UUID, Inventory> entry : hits.entrySet()) {
-            //uuid of the player with bounty over their head
-            UUID uuid = entry.getKey();
-
-            //Bounty
-            Inventory inv = entry.getValue();
-
-            //Make player skull
-            ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-            SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            meta.setOwningPlayer(Bukkit.getOfflinePlayer(uuid));
-            skull.setItemMeta(meta);
-
-            //Add skull to menu
-            hitsMenu.addItem(skull);
-
-            //This is to stop the inventory from getting full
-            if (i > 53) {
-                break;
+        hits.values().forEach(j -> {
+            if (hitsMenu.getContents().length < 53) {
+                hitsMenu.addItem(j.getSkull());
             }
-            i++;
-        }
+        });
     }
 
 }
