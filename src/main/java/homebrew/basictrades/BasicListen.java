@@ -39,9 +39,8 @@ public class BasicListen implements Listener {
                 hits.put(hit.bounty, hit);
 
                 //Determine whether the entire server gets an anouncement
-                if (evt.getPlayer().hasPermission("BasedHits.anonymous.hit")) {
+                if (hit.owner == null) {
                     BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
-                    hit.owner = null;
                 } else {
                     BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 }
