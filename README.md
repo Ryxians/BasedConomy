@@ -6,12 +6,14 @@ BasedHits is an item based bounty plugin allowing players to place bounties/hits
 *Spigot page: SOON*
 
 ## Commands
-/hit <playername> will place a hit on a player. The player may also use the aliases:
+'/hit <playername>' will place a hit on a player. The player may also use the aliases:
 [hits, bounty, bounties]
 
-/view will open a menu with all active bounties (currently limited to 54 at max)
+'/hit <playername> a' will place an anonymous hit on a player, works with all hit aliases. Requires permission to BasedHits.anonymous.hit
 
-/view <playername> will view a specific players bounty.
+'/view' will open a menu with all active bounties (currently limited to 54 at max)
+
+'/view <playername>' will view a specific players bounty.
 
 ## Permissions
 ```
