@@ -34,7 +34,7 @@ public class HitC implements CommandExecutor {
                         boolean rc = !hits.containsKey(hitUsr);
                         if (rc) {
                             Inventory temp = cmdSender.openInventory(Bukkit.createInventory(cmdSender, 27, "Hit Price")).getTopInventory();
-                            HitO hit = new HitO(null, hitUsr, temp);
+                            HitO hit = new HitO(cmdSender, hitUsr, temp);
                             sHits.put(temp, hit);
                         } else {
                             BasicTrades.fail(sender, "That player already has a hit >>:(");

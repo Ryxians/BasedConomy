@@ -10,8 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.File;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class HitO {
@@ -19,6 +18,7 @@ public class HitO {
     public UUID owner;
     public UUID bounty;
     public Inventory prize;
+    public Date created;
 
     public HitO(OfflinePlayer bountyOwner, OfflinePlayer bounty, Inventory inventory) {
         if (bountyOwner == null) {
@@ -54,7 +54,7 @@ public class HitO {
             //Grab owner
             switch (key) {
                 case "Owner":
-                    owner = (UUID) value;
+                    owner = UUID.fromString((String) value);
                     break;
                 default:
                     if (value instanceof ItemStack) {
@@ -87,6 +87,11 @@ public class HitO {
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
         SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwningPlayer(Bukkit.getOfflinePlayer(bounty));
+        List<String> lore = new ArrayList<String>();
+        if (owner != null) {
+            lore.add("Bounty Owner: " + getOwner().getName());
+        }
+        meta.setLore(lore);
         skull.setItemMeta(meta);
         return skull;
     }
@@ -101,7 +106,7 @@ public class HitO {
 
         //Save owner
         if (owner != null) {
-            savedHit.set("Owner", owner);
+            savedHit.set("Owner", owner.toString());
         }
 
         //Save Inventory

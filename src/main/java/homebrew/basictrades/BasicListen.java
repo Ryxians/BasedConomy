@@ -37,14 +37,16 @@ public class BasicListen implements Listener {
             } else {
                 HitO hit = sHits.remove(evt.getInventory());
                 hits.put(hit.bounty, hit);
-                BasicTrades.save();
 
                 //Determine whether the entire server gets an anouncement
                 if (evt.getPlayer().hasPermission("BasedHits.anonymous.hit")) {
                     BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
+                    hit.owner = null;
                 } else {
                     BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 }
+
+                BasicTrades.save();
             }
         }
     }
@@ -53,7 +55,7 @@ public class BasicListen implements Listener {
     public void hitView(InventoryClickEvent evt) {
         if (checkForInventory(evt.getInventory()) || BasicTrades.hitsMenu == evt.getInventory()) {
             if (BasicTrades.hitsMenu == evt.getInventory()) {
-                if (evt.getCurrentItem().getType() == Material.PLAYER_HEAD) {
+                if ((evt.getCurrentItem() != null) && evt.getCurrentItem().getType() == Material.PLAYER_HEAD) {
                     SkullMeta meta = (SkullMeta) evt.getCurrentItem().getItemMeta();
                     UUID uuid = meta.getOwningPlayer().getUniqueId();
                     evt.getView().getPlayer().openInventory(hits.get(uuid).prize);
