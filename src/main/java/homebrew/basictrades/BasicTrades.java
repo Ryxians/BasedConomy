@@ -1,20 +1,14 @@
 package homebrew.basictrades;
 
-import homebrew.basictrades.commands.Hit;
+import homebrew.basictrades.commands.HitC;
 import homebrew.basictrades.commands.View;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -37,7 +31,7 @@ public final class BasicTrades extends JavaPlugin {
         dataFolder = BasicTrades.instance.getDataFolder();
         loadHits();
         hitsToMenu();
-        getCommand("hit").setExecutor(new Hit());
+        getCommand("hit").setExecutor(new HitC());
         getCommand("view").setExecutor(new View());
         getServer().getPluginManager().registerEvents(new BasicListen(), this);
     }

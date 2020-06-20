@@ -13,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Map;
 import java.util.UUID;
 
-public class Hit implements CommandExecutor {
+public class HitC implements CommandExecutor {
     BasicTrades plugin = BasicTrades.instance;
     Map<UUID, HitO> hits = plugin.hits;
     Map<Inventory, HitO> sHits = plugin.sHits;
