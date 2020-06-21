@@ -5,8 +5,10 @@ import homebrew.basictrades.commands.View;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.*;
@@ -19,9 +21,13 @@ public final class BasicTrades extends JavaPlugin {
 
     public static Map<UUID, HitO> hits = new HashMap<UUID, HitO>();
 
+    public static Map<UUID, HitO> eHits = new HashMap<UUID, HitO>();
+
     public static Inventory hitsMenu;
 
     public static File dataFolder;
+
+    public FileConfiguration config = getConfig();
 
 
     @Override
@@ -29,6 +35,11 @@ public final class BasicTrades extends JavaPlugin {
         // Plugin startup logic
         instance = this;
         dataFolder = BasicTrades.instance.getDataFolder();
+
+        //get config.yml
+        config.options().copyDefaults(true);
+        saveDefaultConfig();
+
         loadHits();
         hitsToMenu();
         getCommand("hit").setExecutor(new HitC());
@@ -97,7 +108,7 @@ public final class BasicTrades extends JavaPlugin {
         });
     }
 
-    private static File[] getBounties() {
+    public static File[] getBounties() {
         //Get the hits folder with all the hit files
         File hitsFolder = new File(dataFolder, "Hits" + File.separator);
         File[] bounties = hitsFolder.listFiles();
@@ -116,7 +127,7 @@ public final class BasicTrades extends JavaPlugin {
         return uuid;
     }
 
-    public static void hitsToMenu() {
+    private static void hitsToMenu() {
         int size = 27;
         if (hits.size() >= 27) size = 54;
         hitsMenu = Bukkit.createInventory(null, size, "Active Server Bounties");

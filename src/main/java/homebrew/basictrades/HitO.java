@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.*;
@@ -18,7 +19,7 @@ public class HitO {
     public UUID owner;
     public UUID bounty;
     public Inventory prize;
-    public Date created;
+    private HitExpireTask task;
 
     public HitO(OfflinePlayer bountyOwner, OfflinePlayer bounty, Inventory inventory) {
         if (bountyOwner == null) {
@@ -34,12 +35,22 @@ public class HitO {
         }
 
         prize = inventory;
+        try {
+            long temp = BasicTrades.instance.config.getLong("expiration");
+            task = new HitExpireTask(this, temp);
+        } catch (Exception ex) {
+            BasicTrades.logInfo("Config Expiration failed to load, expiration disabled.");
+            ex.printStackTrace();
+        }
     }
 
     public HitO(File loadHit) {
         //Open config
         ConfigManagement configMan = new ConfigManagement(loadHit);
         FileConfiguration savedHit = configMan.getConfig();
+
+        //delay for expiration
+        long delay = 24000;
 
         //Get bounty
         bounty = fileToUUID(loadHit.getName());
@@ -56,6 +67,11 @@ public class HitO {
                 case "Owner":
                     owner = UUID.fromString((String) value);
                     break;
+                case "Expiration":
+                    //String temp = (String) value;
+                    //delay = Long.parseLong(temp);
+                    delay = savedHit.getLong(key);
+                    break;
                 default:
                     if (value instanceof ItemStack) {
                         ItemStack item = (ItemStack) value;
@@ -67,20 +83,25 @@ public class HitO {
         }
         prize = Bukkit.createInventory(null, 27, "Bounty");
         prize.setContents(is);
+        task = new HitExpireTask(this, delay);
     }
 
-    public Player getOwner() {
-        Player owner;
+    public OfflinePlayer getOwner() {
+        OfflinePlayer owner;
         if (this.owner != null) {
-            owner = Bukkit.getPlayer(this.owner);
+            owner = Bukkit.getOfflinePlayer(this.owner);
         } else {
             owner = null;
         }
         return owner;
     }
 
-    public Player getBounty() {
-        return Bukkit.getPlayer(bounty);
+    public String getBountyName() {
+        return getBounty().getName();
+    }
+
+    public OfflinePlayer getBounty() {
+        return Bukkit.getOfflinePlayer(bounty);
     }
 
     public ItemStack getSkull() {
@@ -103,6 +124,8 @@ public class HitO {
     public void saveHit(String fileName) {
         ConfigManagement configMan = new ConfigManagement(fileName);
         FileConfiguration savedHit = configMan.getConfig();
+
+        savedHit.set("Expiration", Long.valueOf(task.delay));
 
         //Save owner
         if (owner != null) {
