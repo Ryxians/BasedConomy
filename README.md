@@ -52,4 +52,4 @@ expiration: 5184000
 4. A way for people to claim their expired hits
 5. Being able to sort hits by how new they are
 6. Permission levels for how many hits a person can levy
-
+7. Add a viewable time stamp of hit expiration
