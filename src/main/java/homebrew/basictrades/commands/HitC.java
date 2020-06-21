@@ -59,7 +59,7 @@ public class HitC implements CommandExecutor {
         boolean rc;
         if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
             OfflinePlayer hitUsr = Bukkit.getOfflinePlayer(args[0]);
-            if (!hits.containsKey(hitUsr)) {
+            if (!hits.containsKey(hitUsr.getUniqueId())) {
                 rc = true;
             } else {
                 BasicTrades.fail(cmdSender, "That player already has a hit >>:(");

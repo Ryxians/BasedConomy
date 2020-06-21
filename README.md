@@ -37,15 +37,19 @@ BasedHits.hit:
     default: false
 ```
 
+## Config
+Expiration in config:
+```yaml
+# Delay in ticks till expiration (http://mapmaking.fr/tick/)
+expiration: 5184000
+```
+5184000 is in ticks, translates to 3 days.
+
 ## To do
 1. Create multiple viewing pages
-2. Player notification on join
-3. Black/whitelist in config
-4. Add hit expiration
-5. Display hit expiration
-6. Add an ingame way to delete hits (staff)
-7. Automatic Hit deletion
-8. A way for people to claim their expired hits
-9. Being able to sort hits by how new they are
-10. Permission levels for how many hits a person can levy
+2. Black/whitelist in config
+3. Add an ingame way to delete hits (staff)
+4. A way for people to claim their expired hits
+5. Being able to sort hits by how new they are
+6. Permission levels for how many hits a person can levy
 

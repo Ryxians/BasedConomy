@@ -9,6 +9,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -99,6 +100,18 @@ public class BasicListen implements Listener {
                     BasicTrades.save();
                     evt.setDeathMessage(null);
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent evt) {
+        if (hits.containsKey(evt.getPlayer().getUniqueId())) {
+            HitO hit = hits.get(evt.getPlayer().getUniqueId());
+            if (hit.owner != null) {
+                BasicTrades.success(evt.getPlayer(), hit.getOwner().getName() + " has an active bounty on your head.");
+            } else {
+                BasicTrades.success("An active bounty is over your head.");
             }
         }
     }

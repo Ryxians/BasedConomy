@@ -42,8 +42,12 @@ public final class BasicTrades extends JavaPlugin {
 
         loadHits();
         hitsToMenu();
+
+        //Load commands
         getCommand("hit").setExecutor(new HitC());
         getCommand("view").setExecutor(new View());
+
+        //Load listener
         getServer().getPluginManager().registerEvents(new BasicListen(), this);
     }
 
