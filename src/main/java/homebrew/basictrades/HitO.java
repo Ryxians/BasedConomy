@@ -3,10 +3,14 @@ package homebrew.basictrades;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Chest;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BlockDataMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -19,7 +23,7 @@ public class HitO {
     public UUID owner;
     public UUID bounty;
     public Inventory prize;
-    private HitExpireTask task;
+    protected HitExpireTask task;
 
     public HitO(OfflinePlayer bountyOwner, OfflinePlayer bounty, Inventory inventory) {
         if (bountyOwner == null) {
@@ -117,12 +121,27 @@ public class HitO {
         return skull;
     }
 
-    public void saveHit() {
-        saveHit("Hits" + File.separator + bounty + ".yml");
+    public ItemStack getChest() {
+        //Create Chest Item
+        ItemStack chest = new ItemStack(Material.CHEST, 1);
+
+        //Place Prize items into chest
+        BlockStateMeta stateMeta = (BlockStateMeta) chest.getItemMeta();
+        Chest chestState = (Chest) stateMeta.getBlockState();
+        chestState.getInventory().setContents(prize.getContents());
+        stateMeta.setBlockState(chestState);
+
+        stateMeta.setDisplayName("Expired Bounty On: " + getBountyName());
+        List<String> lore = new ArrayList<String>();
+        lore.add("ITEMS IN HERE!");
+        stateMeta.setLore(lore);
+        chest.setItemMeta(stateMeta);
+
+        return chest;
     }
 
-    public void saveHit(String fileName) {
-        ConfigManagement configMan = new ConfigManagement(fileName);
+    public void saveHit() {
+        ConfigManagement configMan = new ConfigManagement("Hits" + File.separator + bounty + ".yml");
         FileConfiguration savedHit = configMan.getConfig();
 
         savedHit.set("Expiration", Long.valueOf(task.delay));
