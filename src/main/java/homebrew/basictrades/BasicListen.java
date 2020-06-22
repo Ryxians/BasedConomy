@@ -9,6 +9,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,15 +25,12 @@ public class BasicListen implements Listener {
 
     public static Map<UUID, HitO> hits = BasicTrades.hits;
 
+    public static Map<UUID, HitO> eHits = BasicTrades.eHits;
+
     @EventHandler
     public void hitCreate(InventoryCloseEvent evt) {
         if (sHits.containsKey(evt.getInventory())) {
-            boolean isEmpty = true;
-            for (ItemStack i : evt.getInventory().getContents()) {
-                if (i != null) {
-                    isEmpty = false;
-                }
-            }
+            boolean isEmpty = BasicTrades.isInventoryEmpty(evt.getInventory());
             if (isEmpty) {
                 sHits.remove(evt.getInventory());
             } else {
@@ -106,12 +104,23 @@ public class BasicListen implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent evt) {
-        if (hits.containsKey(evt.getPlayer().getUniqueId())) {
-            HitO hit = hits.get(evt.getPlayer().getUniqueId());
+        Player player = evt.getPlayer();
+        if (hits.containsKey(player.getUniqueId())) {
+            HitO hit = hits.get(player.getUniqueId());
             if (hit.owner != null) {
-                BasicTrades.success(evt.getPlayer(), hit.getOwner().getName() + " has an active bounty on your head.");
+                BasicTrades.success(player, hit.getOwner().getName() + " has an active bounty on your head.");
             } else {
                 BasicTrades.success("An active bounty is over your head.");
+            }
+        }
+        if (eHits.containsKey(player.getUniqueId())) {
+            if (!BasicTrades.isInventoryEmpty(player.getInventory())) {
+                HitO hit = eHits.remove(player.getUniqueId());
+                player.getInventory().addItem(hit.getChest());
+                BasicTrades.success(player, "Your hit on " + hit.getBountyName() + " has expired.");
+                BasicTrades.success(player, "You have been gifted a chest, place it to receive your refund.");
+            } else {
+                BasicTrades.fail(player, "You have an expired bounty!");
             }
         }
     }

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -141,6 +142,16 @@ public final class BasicTrades extends JavaPlugin {
                 hitsMenu.addItem(j.getSkull());
             }
         });
+    }
+
+    public static boolean isInventoryEmpty(Inventory inv) {
+        boolean isEmpty = true;
+        for (ItemStack i : inv.getContents()) {
+            if (i != null) {
+                isEmpty = false;
+            }
+        }
+        return isEmpty;
     }
 
 }
