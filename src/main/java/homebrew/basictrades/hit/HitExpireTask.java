@@ -1,8 +1,10 @@
-package homebrew.basictrades;
+package homebrew.basictrades.hit;
 
+import homebrew.basictrades.BasicTrades;
+import homebrew.basictrades.tools.HitTools;
+import homebrew.basictrades.tools.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 public class HitExpireTask extends BukkitRunnable {
     private HitO hit;
@@ -19,11 +21,11 @@ public class HitExpireTask extends BukkitRunnable {
         if (delay < 100) {
             this.cancel();
             BasicTrades.hits.remove(hit.bounty);
-            BasicTrades.success("Bounty on " + ChatColor.stripColor(hit.getBountyName()) + " has expired!");
+            Messages.success("Bounty on " + ChatColor.stripColor(hit.getBountyName()) + " has expired!");
             if (hit.owner != null) {
                 BasicTrades.eHits.put(hit.owner, hit);
             }
-            BasicTrades.save();
+            HitTools.save();
         } else {
             delay -= 100;
         }

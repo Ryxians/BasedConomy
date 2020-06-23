@@ -1,5 +1,8 @@
 package homebrew.basictrades;
 
+import homebrew.basictrades.hit.HitO;
+import homebrew.basictrades.tools.HitTools;
+import homebrew.basictrades.tools.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,7 +12,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +32,7 @@ public class BasicListen implements Listener {
     @EventHandler
     public void hitCreate(InventoryCloseEvent evt) {
         if (sHits.containsKey(evt.getInventory())) {
-            boolean isEmpty = BasicTrades.isInventoryEmpty(evt.getInventory());
+            boolean isEmpty = HitTools.isInventoryEmpty(evt.getInventory());
             if (isEmpty) {
                 sHits.remove(evt.getInventory());
             } else {
@@ -39,12 +41,12 @@ public class BasicListen implements Listener {
 
                 //Determine whether the entire server gets an anouncement
                 if (hit.owner == null) {
-                    BasicTrades.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
+                    Messages.success("An anonymous player has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 } else {
-                    BasicTrades.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
+                    Messages.success(evt.getPlayer().getName() + " has placed a bounty on " + Bukkit.getOfflinePlayer(hit.bounty).getName() + ".");
                 }
 
-                BasicTrades.save();
+                HitTools.save();
             }
         }
     }
@@ -91,11 +93,11 @@ public class BasicListen implements Listener {
                         evt.getDrops().add(i);
                     }
                     if (killer.hasPermission("BasedHits.anonymous.claim")) {
-                        BasicTrades.success("The bounty on " + died.getName() + " has been claimed.");
+                        Messages.success("The bounty on " + died.getName() + " has been claimed.");
                     } else {
-                        BasicTrades.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
+                        Messages.success(evt.getDeathMessage() + ", thus claiming the Bounty.");
                     }
-                    BasicTrades.save();
+                    HitTools.save();
                     evt.setDeathMessage(null);
                 }
             }
@@ -108,19 +110,19 @@ public class BasicListen implements Listener {
         if (hits.containsKey(player.getUniqueId())) {
             HitO hit = hits.get(player.getUniqueId());
             if (hit.owner != null) {
-                BasicTrades.success(player, hit.getOwner().getName() + " has an active bounty on your head.");
+                Messages.success(player, hit.getOwner().getName() + " has an active bounty on your head.");
             } else {
-                BasicTrades.success("An active bounty is over your head.");
+                Messages.success("An active bounty is over your head.");
             }
         }
         if (eHits.containsKey(player.getUniqueId())) {
-            if (!BasicTrades.isInventoryEmpty(player.getInventory())) {
+            if (!HitTools.isInventoryEmpty(player.getInventory())) {
                 HitO hit = eHits.remove(player.getUniqueId());
                 player.getInventory().addItem(hit.getChest());
-                BasicTrades.success(player, "Your hit on " + hit.getBountyName() + " has expired.");
-                BasicTrades.success(player, "You have been gifted a chest, place it to receive your refund.");
+                Messages.success(player, "Your hit on " + hit.getBountyName() + " has expired.");
+                Messages.success(player, "You have been gifted a chest, place it to receive your refund.");
             } else {
-                BasicTrades.fail(player, "You have an expired bounty!");
+                Messages.fail(player, "You have an expired bounty!");
             }
         }
     }

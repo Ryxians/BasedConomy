@@ -1,7 +1,8 @@
 package homebrew.basictrades.commands;
 
 import homebrew.basictrades.BasicTrades;
-import homebrew.basictrades.HitO;
+import homebrew.basictrades.hit.HitO;
+import homebrew.basictrades.tools.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -26,7 +27,7 @@ public class HitC implements CommandExecutor {
             switch (args.length) {
                 case 0:
                     //When no player is specified
-                    BasicTrades.fail(sender, "Please specify a player.");
+                    Messages.fail(sender, "Please specify a player.");
                     break;
                 case 1:
                     //When one person is specified
@@ -40,17 +41,17 @@ public class HitC implements CommandExecutor {
                     if (cmdSender.hasPermission("BasedHits.anonymous.hit") && args[1].equals("a")) {
                         if (checkCommand(args, cmdSender)) {
                             placesHit(cmdSender, Bukkit.getOfflinePlayer(args[0]), true);
-                            BasicTrades.success(cmdSender, "Anonymous Hit open, " + ChatColor.RED + "you will not be able to reclaim these items!");
+                            Messages.success(cmdSender, "Anonymous Hit open, " + ChatColor.RED + "you will not be able to reclaim these items!");
                             break;
                         }
                     }
                 default:
                     //when more than one person is specified
-                    BasicTrades.fail(sender, "Excuse me, one hit at a time.");
+                    Messages.fail(sender, "Excuse me, one hit at a time.");
                     break;
             }
         } else {
-            BasicTrades.fail(sender, "This is a player command.");
+            Messages.fail(sender, "This is a player command.");
         }
         return true;
     }
@@ -62,11 +63,11 @@ public class HitC implements CommandExecutor {
             if (!hits.containsKey(hitUsr.getUniqueId())) {
                 rc = true;
             } else {
-                BasicTrades.fail(cmdSender, "That player already has a hit >>:(");
+                Messages.fail(cmdSender, "That player already has a hit >>:(");
                 rc = false;
             }
         } else {
-            BasicTrades.fail(cmdSender, "That is not a player >:(");
+            Messages.fail(cmdSender, "That is not a player >:(");
             rc = false;
         }
         return rc;

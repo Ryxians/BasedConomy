@@ -1,7 +1,9 @@
 package homebrew.basictrades.commands;
 
 import homebrew.basictrades.BasicTrades;
-import homebrew.basictrades.HitO;
+import homebrew.basictrades.hit.HitO;
+import homebrew.basictrades.tools.HitTools;
+import homebrew.basictrades.tools.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +28,7 @@ public class View implements CommandExecutor {
                     Inventory view = hits.get(hitUsr).prize;
                     ((Player) sender).openInventory(view);
                 } else {
-                    BasicTrades.fail(sender, "There is not an existing hit for this player.");
+                    Messages.fail(sender, "There is not an existing hit for this player.");
                 }
             } else {
                 ((Player)sender).openInventory(BasicTrades.hitsMenu);

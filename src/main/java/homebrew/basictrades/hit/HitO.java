@@ -1,24 +1,24 @@
-package homebrew.basictrades;
+package homebrew.basictrades.hit;
 
+import homebrew.basictrades.BasicTrades;
+import homebrew.basictrades.tools.ConfigManagement;
+import homebrew.basictrades.interfaces.HitI;
+import homebrew.basictrades.tools.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BlockDataMeta;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
-public class HitO {
+public class HitO implements HitI {
     //Important things relative to the hit
     public UUID owner;
     public UUID bounty;
@@ -43,7 +43,7 @@ public class HitO {
             long temp = BasicTrades.instance.config.getLong("expiration");
             task = new HitExpireTask(this, temp);
         } catch (Exception ex) {
-            BasicTrades.logInfo("Config Expiration failed to load, expiration disabled.");
+            Messages.logInfo("Config Expiration failed to load, expiration disabled.");
             ex.printStackTrace();
         }
     }
@@ -100,12 +100,27 @@ public class HitO {
         return owner;
     }
 
+    @Override
+    public UUID getOwnerUUID() {
+        return owner;
+    }
+
+    @Override
+    public String getOwnerName() {
+        return getOwner().getName();
+    }
+
     public String getBountyName() {
         return getBounty().getName();
     }
 
     public OfflinePlayer getBounty() {
         return Bukkit.getOfflinePlayer(bounty);
+    }
+
+    @Override
+    public UUID getBountyUUID() {
+        return bounty;
     }
 
     public ItemStack getSkull() {
