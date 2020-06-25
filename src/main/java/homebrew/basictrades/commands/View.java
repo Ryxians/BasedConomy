@@ -25,7 +25,7 @@ public class View implements CommandExecutor {
                 UUID hitUsr = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
                 boolean rc = hits.containsKey(hitUsr);
                 if (rc) {
-                    Inventory view = hits.get(hitUsr).prize;
+                    Inventory view = hits.get(hitUsr).getPrize();
                     ((Player) sender).openInventory(view);
                 } else {
                     Messages.fail(sender, "There is not an existing hit for this player.");

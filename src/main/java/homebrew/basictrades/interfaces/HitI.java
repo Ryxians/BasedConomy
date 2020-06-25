@@ -1,6 +1,7 @@
 package homebrew.basictrades.interfaces;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
@@ -21,6 +22,8 @@ public interface HitI {
     public ItemStack getSkull();
 
     public ItemStack getChest();
+
+    public Inventory getPrize();
 
     public void saveHit();
 }

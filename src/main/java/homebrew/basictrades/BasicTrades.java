@@ -1,5 +1,6 @@
 package homebrew.basictrades;
 
+import homebrew.basictrades.hit.HitE;
 import homebrew.basictrades.hit.HitO;
 import homebrew.basictrades.commands.HitC;
 import homebrew.basictrades.commands.View;
@@ -23,7 +24,7 @@ public final class BasicTrades extends JavaPlugin {
 
     public static Map<UUID, HitO> hits = new HashMap<UUID, HitO>();
 
-    public static Map<UUID, HitO> eHits = new HashMap<UUID, HitO>();
+    public static Map<UUID, HitE> eHits = new HashMap<UUID, HitE>();
 
     public static Inventory hitsMenu;
 

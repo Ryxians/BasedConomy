@@ -21,7 +21,7 @@ public class HitTools {
         //Per bounty file
         for (int i = 0; i < bounties.length; i++) {
             HitO hit = new HitO(bounties[i]);
-            BasicTrades.hits.put(hit.bounty, hit);
+            BasicTrades.hits.put(hit.getBountyUUID(), hit);
         }
 
     }
@@ -53,7 +53,7 @@ public class HitTools {
         return bounties;
     }
 
-    private static UUID fileToUUID(String s) {
+    public static UUID fileToUUID(String s) {
         //Build the string of file.yml without .yml
         char[] arr = s.toCharArray();
         String name = "";
