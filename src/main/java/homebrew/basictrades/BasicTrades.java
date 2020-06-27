@@ -24,7 +24,7 @@ public final class BasicTrades extends JavaPlugin {
 
     public static Map<UUID, HitO> hits = new HashMap<UUID, HitO>();
 
-    public static Map<UUID, HitE> eHits = new HashMap<UUID, HitE>();
+    public static Map<UUID, List<HitE>> eHits = new HashMap<UUID, List<HitE>>();
 
     public static Inventory hitsMenu;
 
@@ -45,6 +45,7 @@ public final class BasicTrades extends JavaPlugin {
 
         HitTools.loadHits();
         HitTools.hitsToMenu();
+        HitTools.loadExpiredHits();
 
         //Load commands
         getCommand("hit").setExecutor(new HitC());
@@ -58,6 +59,7 @@ public final class BasicTrades extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         HitTools.saveHits();
+        HitTools.saveExpiredHits();
     }
 
 }

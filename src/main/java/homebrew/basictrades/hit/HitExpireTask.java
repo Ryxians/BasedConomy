@@ -7,25 +7,35 @@ import homebrew.basictrades.tools.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HitExpireTask extends BukkitRunnable {
     private HitI hit;
     protected long delay;
 
     public HitExpireTask(HitI hit, long delay) {
-        this.delay = delay;
-        this.hit = hit;
-        this.runTaskTimerAsynchronously(BasicTrades.instance, 0, 100);
+        if (hit instanceof HitO) {
+            this.delay = delay;
+            this.hit = hit;
+            this.runTaskTimerAsynchronously(BasicTrades.instance, 0, 100);
+        }
     }
 
     @Override
     public void run() {
         if (delay < 100) {
+            //Cancel repeating task
             this.cancel();
+
+            //Remove hit from hits
             BasicTrades.hits.remove(hit.getBountyUUID());
             Messages.success("Bounty on " + ChatColor.stripColor(hit.getBountyName()) + " has expired!");
+
+            //Check if hit has an owner
             if (hit.getOwnerUUID() != null) {
-                HitE expiredHit = new HitE(hit.getOwner(), hit.getBounty(), hit.getPrize());
-                BasicTrades.eHits.put(hit.getOwnerUUID(), expiredHit);
+                //Load hit to expired
+                HitTools.loadExpiredHit(hit.getOwner(), hit.getBounty(), hit.getPrize());
             }
             HitTools.save();
         } else {

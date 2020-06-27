@@ -18,6 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,7 +29,7 @@ public class BasicListen implements Listener {
 
     public static Map<UUID, HitO> hits = BasicTrades.hits;
 
-    public static Map<UUID, HitE> eHits = BasicTrades.eHits;
+    public static Map<UUID, List<HitE>> eHits = BasicTrades.eHits;
 
     @EventHandler
     public void hitCreate(InventoryCloseEvent evt) {
@@ -117,6 +118,15 @@ public class BasicListen implements Listener {
             }
         }
         if (eHits.containsKey(player.getUniqueId())) {
+            List<HitE> list = eHits.get(player.getUniqueId());
+            Inventory inventory = Bukkit.createInventory(null, 27, "Expired Hits");
+            list.forEach(i -> {
+                inventory.addItem(i.getChest());
+            });
+            player.openInventory(inventory);
+        }
+        /*
+        if (eHits.containsKey(player.getUniqueId())) {
             if (!HitTools.isInventoryEmpty(player.getInventory())) {
                 HitE hit = eHits.remove(player.getUniqueId());
                 player.getInventory().addItem(hit.getChest());
@@ -126,5 +136,7 @@ public class BasicListen implements Listener {
                 Messages.fail(player, "You have an expired bounty!");
             }
         }
+
+         */
     }
 }

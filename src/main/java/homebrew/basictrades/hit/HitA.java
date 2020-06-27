@@ -45,7 +45,7 @@ public abstract class HitA implements HitI {
         prize = inventory;
         try {
             long temp = BasicTrades.instance.config.getLong("expiration");
-            task = new HitExpireTask(this, temp);
+            makeTask(temp);
         } catch (Exception ex) {
             Messages.logInfo("Config Expiration failed to load, expiration disabled.");
             ex.printStackTrace();
@@ -75,6 +75,9 @@ public abstract class HitA implements HitI {
                 case "Owner":
                     owner = UUID.fromString((String) value);
                     break;
+                case "Bounty":
+                    bounty = UUID.fromString((String) value);
+                    break;
                 case "Expiration":
                     //String temp = (String) value;
                     //delay = Long.parseLong(temp);
@@ -91,7 +94,7 @@ public abstract class HitA implements HitI {
         }
         prize = Bukkit.createInventory(null, 27, "Bounty");
         prize.setContents(is);
-        task = new HitExpireTask(this, delay);
+        makeTask(delay);
     }
 
     protected HitA() {
@@ -165,5 +168,9 @@ public abstract class HitA implements HitI {
         meta.setLore(lore);
         skull.setItemMeta(meta);
         return skull;
+    }
+
+    protected void makeTask(long delay) {
+        task = new HitExpireTask(this, delay);
     }
 }

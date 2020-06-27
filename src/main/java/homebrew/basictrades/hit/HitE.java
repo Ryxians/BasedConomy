@@ -1,6 +1,7 @@
 package homebrew.basictrades.hit;
 
 import homebrew.basictrades.tools.ConfigManagement;
+import homebrew.basictrades.tools.HitTools;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.Inventory;
@@ -18,17 +19,19 @@ public class HitE extends HitA {
 
     public HitE(File loadHit) {
         super(loadHit);
+        this.owner = HitTools.fileToUUID(loadHit.getName());
     }
 
     @Override
     public void saveHit() {
-        ConfigManagement configMan = new ConfigManagement("Expired" + File.separator + owner + ".yml");
+        saveHit(0);
+    }
+    public void saveHit(int count) {
+        ConfigManagement configMan = new ConfigManagement("Expired" + File.separator + owner + count + ".yml");
         FileConfiguration savedHit = configMan.getConfig();
 
-        //Save owner
-        if (owner != null) {
-            savedHit.set("Owner", owner.toString());
-        }
+
+        savedHit.set("Bounty", bounty.toString());
 
         //Save Inventory
         ItemStack[] contents = prize.getContents();
@@ -36,5 +39,10 @@ public class HitE extends HitA {
             savedHit.set("Inventory." + String.valueOf(i), contents[i]);
         }
         configMan.saveConfig();
+    }
+
+    @Override
+    protected void makeTask(long delay) {
+
     }
 }
